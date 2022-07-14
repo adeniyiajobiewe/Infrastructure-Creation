@@ -5,6 +5,19 @@ orbs:
 
   aws-cli: circleci/aws-cli@2.0.3
 
+
+commands:
+
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy environment
+          # ${CIRCLE_WORKFLOW_ID} is a Built-in environment variable 
+          # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
+
 jobs:
   print_greetings:
     docker:
@@ -22,10 +35,10 @@ jobs:
           name: Create Cloudformation Stack
           command: |
             aws cloudformation deploy \
-              --template-file template.yml \
+              --template-file ./template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
-      
+      - destroy_environment
 
 
 workflows:
