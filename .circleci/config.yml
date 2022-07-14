@@ -28,6 +28,7 @@ jobs:
 
 
 workflows:
-  jobs:
-    - print_greetings
-    - create_infrastructure
+  my_workflow:
+    jobs:
+      - print_greetings
+      - create_infrastructure
