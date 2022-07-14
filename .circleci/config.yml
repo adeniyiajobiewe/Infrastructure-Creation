@@ -41,8 +41,26 @@ jobs:
       - destroy_environment
 
 
+  # Exercise: Config and Deployment
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          # You can get this ID in the section where you registered the SSH Key
+          fingerprints: ["4b:db:62:12:c6:1f:60:67:6d:6a:89:3a:14:44:52:14"] 
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i [inventory-file] [playbook-file]
+
 workflows:
   my_workflow:
     jobs:
       - print_greetings
-      - create_infrastructure
+      - configure_infrastructure
