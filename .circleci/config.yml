@@ -65,7 +65,6 @@ jobs:
     docker: 
       - image: alpine:latest
     steps:
-      - checkout
       - run: apk add --update curl
       - run: apk add --no-cache aws-cli
       - run: 
