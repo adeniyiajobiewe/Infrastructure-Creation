@@ -61,7 +61,8 @@ jobs:
 
   # Exercise: Smoke Testing
   smoke_test:
-    docker: alpine:latest
+    docker: 
+      - image: alpine:latest
     steps:
       - run: apk add --update curl
       - run: 
