@@ -16,7 +16,7 @@ commands:
           # ${CIRCLE_WORKFLOW_ID:0:5} takes the first 5 chars of the variable CIRCLE_CI_WORKFLOW_ID 
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 jobs:
   print_greetings:
@@ -36,7 +36,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file template.yml \
-              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
       - destroy_environment
      
@@ -70,7 +70,15 @@ jobs:
       - run: apk add --no-cache aws-cli
       - run: 
           name: smoke test
-          command: return 1
+          command: |
+            URL="https://blog.udacity.com/"
+            # I am testing if the website below exists
+            if curl -s --head ${URL}
+            then
+              return 1
+            else
+              return 0
+            fi 
       - destroy_environment 
         
 
