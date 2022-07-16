@@ -76,11 +76,11 @@ jobs:
       - run: 
           name: smoke test
           command: |
-            URL="https://blog.udacity.com/"
+            URL="https://blog44.udacity.com/"
             # I am testing if the website below exists
             if curl -s --head ${URL}
             then
-              return 1
+              return 0
             else
               return 1
             fi 
