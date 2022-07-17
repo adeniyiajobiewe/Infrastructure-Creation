@@ -76,7 +76,7 @@ jobs:
       - run: 
           name: smoke test
           command: |
-            URL="https://blog44.udacity.com/"
+            URL="https://blog.udacity.com/"
             # I am testing if the website below exists
             if curl -s --head ${URL}
             then
@@ -86,7 +86,22 @@ jobs:
             fi 
       - destroy_environment:
           ID: ${CIRCLE_WORKFLOW_ID:0:7}
-        
+
+  create_and_deploy_front_end:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Execute bucket.yml - Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+            --template-file bucket.yml \
+            --stack-name stack-create-bucket-${CIRCLE_WORKFLOW_ID:0:7} \
+            --parameter-overrides MyBucketName="mybucket-${CIRCLE_WORKFLOW_ID:0:7}"
+      # Uncomment the step below if yoou wish to upload all contents of the current directory to the S3 bucket
+      - run: aws s3 sync . s3://mybucket-${CIRCLE_WORKFLOW_ID:0:7} --delete
+            
 
 
       
@@ -96,3 +111,4 @@ workflows:
       - print_greetings
       - create_infrastructure
       - smoke_test
+      - create_and_deploy_front_end
